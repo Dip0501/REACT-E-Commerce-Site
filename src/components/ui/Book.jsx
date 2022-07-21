@@ -1,38 +1,50 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import Rating from "./Rating";
+import Price from "./Price";
 
 const Book = ({ book }) => {
+  const [img, setImg] = useState()
+
+
+  useEffect(() => {
+    const image = new Image()
+    image.src = book.url
+    image.onload = () => {
+      setTimeout(() => {
+        setImg(image)
+      }, 300)
+    }
+  })
+
   return (
     <div className="book">
-      <a href="">
-        <figure className="book__img--wrapper">
-          <img src={book.url} alt="" className="book__img" />
-        </figure>
-      </a>
-      <div className="book__title">
-        <a href="/" className="book__title--link">
-          {book.title}
-        </a>
-      </div>
-      <div className="book__rating">
-        {
-            new Array(Math.floor(book.rating)).fill(0).map((_, index) => <FontAwesomeIcon icon="star" key={index}/>)
-
-        }
-        {
-            !Number.isInteger(book.rating) && <FontAwesomeIcon icon="star-half-alt"/>
-        }
-      </div>
-      <div className="book__price">
-        {book.salePrice ? (
-          <>
-            <span className="book__price--normal">${book.originalPrice.toFixed(2)}</span>$
-            {book.salePrice.toFixed(2)}
-          </>
-        ) : (
-            <>${book.originalPrice.toFixed(2)}</>
-        )}
-      </div>
+      {
+        img ?
+        (<>
+        <Link to={`/books/${book.id}`}>
+          <figure className="book__img--wrapper">
+            <img src={img.src} alt="" className="book__img"/>
+          </figure>
+        </Link>
+        <div className="book__title">
+          <Link to={`/books/${book.id}`} className="book__title--link">
+            {book.title}
+          </Link>
+        </div>
+        <Rating rating={book.rating}/>
+        <Price priceSale={book.salePrice} priceOriginal={book.originalPrice} />
+        </>
+        ) : ( 
+        <>
+          <div className="book__img--skeleton">
+            <div className="skeleton book__title--skeleton"></div>
+            <div className="skeleton book__rating--skeleton"></div>
+            <div className="skeleton book__price--skeleton"></div>
+          </div>
+        </>)
+      }
     </div>
   );
 };
