@@ -13,7 +13,7 @@ function BookInfo({ books, addToCart, cart }) {
     addToCart(book)
   }
 
-  function bookInCart(cart) {
+  function bookInCart() {
     return cart.find(book => +book.id === +id)
   }
 
@@ -63,7 +63,7 @@ function BookInfo({ books, addToCart, cart }) {
                 {
                   bookInCart() ? (
                   <Link to={`/cart`} className="book__link">
-                  <button className="btn">Checkout</button>
+                    <button className="btn">Checkout</button>
                   </Link>
                   ) : (
 
